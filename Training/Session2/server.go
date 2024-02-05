@@ -23,13 +23,18 @@ func main() {
 			fmt.Println("Accepted")
 
 			payload, err := Decode(c)
-			if err != nil{
-				fmt.Errorf("%s", err)
+			if err != nil {
+				fmt.Println(err)
 				return
 			}
-
 			fmt.Println(payload)
-
+			
+			p := Binary("Muda muda muda DIO! " + string(payload.Bytes()) + "Success");
+			_, err = p.WriteTo(c)
+			if err != nil{
+				fmt.Println(err)
+				return
+			}
 			/*
 			buf := make([]byte, 1024)
 			n, err := c.Read(buf)

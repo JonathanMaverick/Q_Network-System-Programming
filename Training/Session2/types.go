@@ -35,12 +35,12 @@ func (m Binary) WriteTo(w io.Writer) (int64, error){
 	if err != nil{
 		return 0, err
 	}
-	err = binary.Write(w, binary.BigEndian, int32(len(m)))
+	err = binary.Write(w, binary.BigEndian, uint32(len(m)))
 	if err != nil{
 		return 0, err
 	}
 	n, err := w.Write(m)
-	return int64(n+5), err
+	return int64(n) + 5, err
 }
 
 func (m *Binary) ReadFrom(r io.Reader) (int64, error){
@@ -59,26 +59,36 @@ func (m *Binary) ReadFrom(r io.Reader) (int64, error){
 	}
 	*m = make([]byte, size)
 	n, err := r.Read(*m)
-	return int64(5+n), err
+	return int64(n) + 5, err
 }
 
-func Decode(r io.Reader) (Payload, error){
+func Decode(r io.Reader) (Payload, error) {
 	var typ uint8
+
 	err := binary.Read(r, binary.BigEndian, &typ)
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
-	payload := new(Binary)
+	var size int32
 
-	_, err = payload.ReadFrom(r)
+	err = binary.Read(r, binary.BigEndian, &size)
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
-	return payload, nil
+	payload := make(Binary, size)
+
+	_, err = io.ReadFull(r, payload)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return &payload, nil
 }
