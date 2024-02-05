@@ -14,10 +14,19 @@ func main() {
 
 	defer dial.Close()
 
-	payload := "Alo!"
-	_, err = dial.Write([]byte(payload))
+	// payload := "Alo!"
+	// _, err = dial.Write([]byte(payload))
+	// if err != nil{
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	payload := []byte("Alo!")
+	_, err = dial.Write(payload)
+
 	if err != nil{
 		fmt.Println(err)
 		return
 	}
+
 }

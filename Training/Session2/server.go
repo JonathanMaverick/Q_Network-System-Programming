@@ -22,6 +22,15 @@ func main() {
 		go func(c net.Conn){
 			fmt.Println("Accepted")
 
+			payload, err := Decode(c)
+			if err != nil{
+				fmt.Errorf("%s", err)
+				return
+			}
+
+			fmt.Println(payload)
+
+			/*
 			buf := make([]byte, 1024)
 			n, err := c.Read(buf)
 			if err != nil{
@@ -30,6 +39,13 @@ func main() {
 			}
 
 			fmt.Printf("%+v\n", fmt.Sprintf("%s", buf[:n]))
+			*/
+			// scanner := bufio.NewScanner(c)
+			// scanner.Split(bufio.ScanWords)
+			// scanner.Scan()
+
+			// fmt.Println(scanner.Text())
+
 		}(conn)
 	}
 
